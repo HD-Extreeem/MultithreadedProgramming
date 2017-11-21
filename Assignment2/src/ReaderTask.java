@@ -27,22 +27,23 @@ public class ReaderTask  implements Runnable{
      */
     @Override
     public void run() {
-        char chr;
+        Character chr;
         while(isRunning){
             if (controller.getMode()){
-                if (buffer.getHasChar()){
-                    chr=buffer.getChar();
-                    controller.printChar("Reading "+chr+"\n",false);
-                    readText+=chr;
-                }
-                else{
-                    controller.printChar("No data, Reader waits\n",false);
-                }
+                chr=buffer.getCharAsync();
+                controller.printChar("Reading "+chr+"\n",false);
+                readText+=chr;
             }
             else{
                 chr=buffer.getChar();
-                controller.printChar("Reading "+chr+"\n",false);
-                readText+=chr;
+                if (chr==null){
+                    controller.printChar("No data, Reader waits\n",false);
+                }
+                else{
+                    controller.printChar("Reading "+chr+"\n",false);
+                    readText+=chr;
+                }
+
             }
 
             try {
@@ -74,6 +75,7 @@ public class ReaderTask  implements Runnable{
      */
     public void clear(){
         readText="";
+
     }
 
 }

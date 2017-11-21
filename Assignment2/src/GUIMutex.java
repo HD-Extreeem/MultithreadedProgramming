@@ -125,7 +125,7 @@ public class GUIMutex
 			@Override
 			public void actionPerformed(ActionEvent e) {
                 btnRun.setEnabled(false);
-                controller.run(bSync.isSelected(),txtTrans.getText());
+                controller.run(bAsync.isSelected(),txtTrans.getText());
 			}
 		});
 		pnlTest.add(btnRun);

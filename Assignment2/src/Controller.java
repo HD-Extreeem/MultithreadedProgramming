@@ -8,7 +8,7 @@ public class Controller {
     private ReaderTask readerTask;
     private WriterTask writerTask;
     private GUIMutex gui;
-    private boolean isSync = true;
+    private boolean isAsync = true;
     private String writeText;
 
     /**
@@ -25,11 +25,11 @@ public class Controller {
 
     /**
      * Method handle the start of the processes for the threads
-     * @param isSync boolean which tell if asynchronous or synchronous mode
+     * @param isAsync boolean which tell if asynchronous or synchronous mode
      * @param txt the text that are going to be print
      */
-    public void run(boolean isSync, String txt) {
-        this.isSync = isSync;
+    public void run(boolean isAsync, String txt) {
+        this.isAsync = isAsync;
         writeText = txt;
         writerTask.setWriterRunning(true);
         readerTask.setReaderRunning(true);
@@ -65,6 +65,7 @@ public class Controller {
         gui.setResult(writeText,readerTask.getReadText(),isSame);
         readerTask.clear();
         writerTask.clear();
+        buffer.clear();
     }
 
     /**
@@ -72,6 +73,6 @@ public class Controller {
      * @return the mode of the process asynchronous or synchronous mode
      */
     public boolean getMode() {
-        return isSync;
+        return isAsync;
     }
 }

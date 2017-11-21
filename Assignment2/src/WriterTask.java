@@ -9,6 +9,7 @@ public class WriterTask implements Runnable {
     private Controller controller;
     private CharBuffer buffer;
     private char[] strChar;
+    private boolean isNext = true;
     private int i=0;
     private Random rand = new Random();
     /**
@@ -30,18 +31,7 @@ public class WriterTask implements Runnable {
     public void run() {
 
         while(isRunning){
-            if (controller.getMode()){
-                if (!buffer.getHasChar()){
-                    checkNext();
-                }
-                else{
-                    controller.printChar("Data exists, Writer waits\n",true);
-                }
-            }
-
-            else{
-                checkNext();
-            }
+            checkNext(controller.getMode());
 
             try {
                 Thread.sleep(rand.nextInt((300 - 100) + 1) + 100);
@@ -55,14 +45,33 @@ public class WriterTask implements Runnable {
      * Method which check if next char can be written to the buffer
      * else waits for next run
      */
-    private void checkNext() {
+    private void checkNext(boolean isAsync) {
+
         if (strChar.length==i){
-            controller.setWritingFinished();
+            if (!buffer.getHasChar()){
+                controller.setWritingFinished();
+            }
+
         }
         else {
-            buffer.setChar(strChar[i]);
-            controller.printChar("Writing " + strChar[i]+"\n", true);
-            i++;
+            System.out.println(isAsync);
+            if (isAsync){
+                buffer.setCharAsync(strChar[i]);
+                controller.printChar("Writing " + strChar[i]+"\n", true);
+                i++;
+            }
+            else{
+                isNext = buffer.setChar(strChar[i]);
+                if (isNext){
+                    controller.printChar("Writing " + strChar[i]+"\n", true);
+                    i++;
+                }
+                else{
+                    controller.printChar("Data exists, Writer waits\n",true);
+                }
+            }
+
+
         }
 
     }
